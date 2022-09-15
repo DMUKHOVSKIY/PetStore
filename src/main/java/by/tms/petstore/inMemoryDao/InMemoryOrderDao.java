@@ -1,4 +1,4 @@
-package by.tms.petstore.dao;
+package by.tms.petstore.inMemoryDao;
 
 import by.tms.petstore.entity.Order;
 import by.tms.petstore.service.PetService;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-public class InMemoryStoreDao implements StoreDao {
+public class InMemoryOrderDao implements OrderDao {
 
     @Autowired
     private PetService petService;
@@ -44,11 +44,11 @@ public class InMemoryStoreDao implements StoreDao {
     }
 
     @Override
-    public Optional<Map<PetStatus, Integer>> inventoryByStatus() {
+    public Map<PetStatus, Integer> inventoryByStatus() {
         Map<PetStatus, Integer> map = new HashMap<>();
-        map.put(PetStatus.AVAILABLE, petService.findByStatus(PetStatus.AVAILABLE).get().size());
-        map.put(PetStatus.PENDING, petService.findByStatus(PetStatus.PENDING).get().size());
-        map.put(PetStatus.SOLD, petService.findByStatus(PetStatus.SOLD).get().size());
-        return Optional.ofNullable(map);
+        map.put(PetStatus.AVAILABLE, petService.findByStatus(PetStatus.AVAILABLE).size());
+        map.put(PetStatus.PENDING, petService.findByStatus(PetStatus.PENDING).size());
+        map.put(PetStatus.SOLD, petService.findByStatus(PetStatus.SOLD).size());
+        return map;
     }
 }

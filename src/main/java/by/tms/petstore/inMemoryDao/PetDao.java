@@ -1,4 +1,4 @@
-package by.tms.petstore.dao;
+package by.tms.petstore.inMemoryDao;
 
 import by.tms.petstore.entity.Pet;
 import by.tms.petstore.statusEnum.PetStatus;
@@ -12,7 +12,7 @@ public interface PetDao {
 
     Optional<Pet> update(Pet pet);
 
-    Optional<List<Pet>> findByStatus(PetStatus petStatus);
+    List<Pet> findByStatus(PetStatus petStatus);
 
     Optional<Pet> findPetById(Long petId);
 

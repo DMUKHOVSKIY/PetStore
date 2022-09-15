@@ -24,15 +24,14 @@ public class UserController {
     }
 
     @PostMapping
-    @Operation(summary = "Create User", description = "This can only be done by the logged in user", responses = @ApiResponse(responseCode = "default", description = "\t\n" +
-            "successful operation"))
+    @Operation(summary = "Create User", description = "This can only be done by the logged in user", responses = @ApiResponse(description = "successful operation"))
     public ResponseEntity<User> createUser(@RequestBody @Valid User user) {
         User save = userService.save(user);
         return new ResponseEntity<>(save, HttpStatus.CREATED);
     }
 
     @PostMapping("/createWithList")
-    @Operation(summary = "Create list of users with given input array", responses =@ApiResponse(responseCode = "default", description = "successful operation"))
+    @Operation(summary = "Create list of users with given input array", responses =@ApiResponse(description = "successful operation"))
     public ResponseEntity<List<User>> createWithList(@RequestBody @Valid List<User> users) {
         List<User> users1 = userService.saveList(users);
         return new ResponseEntity<>(users, HttpStatus.CREATED);
@@ -61,10 +60,7 @@ public class UserController {
     @DeleteMapping("/{username}")
     @Operation(summary = "Delete User", description = "This can only be done by the logged in user.")
     public ResponseEntity<User> deleteUser(@PathVariable String username) {
-        Optional<User> user = userService.deleteUser(username);
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user.get());
-        }
-        return ResponseEntity.notFound().build();
+        userService.deleteUser(username);
+        return ResponseEntity.ok().build();
     }
 }

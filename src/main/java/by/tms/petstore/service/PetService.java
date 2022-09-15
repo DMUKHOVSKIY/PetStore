@@ -1,43 +1,44 @@
 package by.tms.petstore.service;
 
-import by.tms.petstore.dao.PetDao;
+import by.tms.petstore.dao.PetRepository;
 import by.tms.petstore.entity.Pet;
 import by.tms.petstore.statusEnum.PetStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class PetService {
     @Autowired
-    private PetDao petDao;
-    private final AtomicLong atomicLong = new AtomicLong(0);
+    private PetRepository petRepository;
 
-    public Pet save(Pet pet){
-        pet.setId(atomicLong.incrementAndGet());
-        return petDao.save(pet);
+    public Pet save(Pet pet) {
+        return petRepository.save(pet);
     }
 
-    public Optional<Pet> update (Pet pet){
-        return petDao.update(pet);
+    public Pet update(Pet pet) {
+        return petRepository.save(pet);
     }
 
-    public Optional<List<Pet>> findByStatus(PetStatus petStatus){
-        return petDao.findByStatus(petStatus);
+    public List<Pet> findByStatus(PetStatus petStatus) {
+        return petRepository.findByPetStatusOrderByNameAsc(petStatus);
     }
 
-    public Optional<Pet> findById(Long id){
-        return petDao.findPetById(id);
+    public Optional<Pet> findById(Long id) {
+        return petRepository.findById(id);
     }
 
-    public Optional<Pet> updatePetById(Long id, String name, PetStatus petStatus){
-        return petDao.updatePetById(id, name, petStatus);
+
+    @Transactional
+    public void updatePetById(Long id, String name, PetStatus petStatus) {
+     petRepository.updatePetById(id, name, petStatus);
     }
 
-    public Optional<Pet> deletePetById(Long id){
-        return petDao.deletePetById(id);
+    public void deletePetById(Long id) {
+        petRepository.deleteById(id);
     }
 }

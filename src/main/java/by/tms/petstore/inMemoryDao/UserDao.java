@@ -1,4 +1,4 @@
-package by.tms.petstore.dao;
+package by.tms.petstore.inMemoryDao;
 
 import by.tms.petstore.entity.User;
 

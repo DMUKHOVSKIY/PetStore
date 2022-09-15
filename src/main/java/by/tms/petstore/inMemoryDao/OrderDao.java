@@ -1,4 +1,4 @@
-package by.tms.petstore.dao;
+package by.tms.petstore.inMemoryDao;
 
 import by.tms.petstore.entity.Order;
 import by.tms.petstore.statusEnum.PetStatus;
@@ -6,9 +6,12 @@ import by.tms.petstore.statusEnum.PetStatus;
 import java.util.Map;
 import java.util.Optional;
 
-public interface StoreDao {
+public interface OrderDao {
     Order save(Order order);
+
     Optional<Order> findById(Long id);
+
     Optional<Order> delete(Long id);
-    Optional<Map<PetStatus,Integer>> inventoryByStatus();
+
+    Map<PetStatus, Integer> inventoryByStatus();
 }

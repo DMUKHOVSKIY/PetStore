@@ -16,12 +16,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/pet")
-@Tag(name= "pet", description = "Everything about your Pets")
+@Tag(name = "pet", description = "Everything about your Pets")
 public class PetController {
 
     private final PetService petService;
 
-    public PetController (PetService petService){
+    public PetController(PetService petService) {
         this.petService = petService;
     }
 
@@ -32,30 +32,26 @@ public class PetController {
     }
 
     @PutMapping
-    @Operation(summary = "Update an existing pet" )
+    @Operation(summary = "Update an existing pet")
     public ResponseEntity<Pet> updatePet(@RequestBody @Valid Pet pet) {
-        Optional<Pet> update = petService.update(pet);
-        if(update.isPresent()){
-            return ResponseEntity.ok(update.get());
-        }
-        return ResponseEntity.badRequest().build();
+        return new ResponseEntity<>(petService.update(pet), HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/findByStatus")
     @Operation(summary = "Finds Pets By status", description = "Multiple status values can be provided with comma separated strings")
     public ResponseEntity<List<Pet>> findPetsByStatus(PetStatus status) {
-        Optional<List<Pet>> byStatus = petService.findByStatus(status);
-        if(byStatus.isPresent()){
-            return ResponseEntity.ok(byStatus.get());
+        List<Pet> byStatus = petService.findByStatus(status);
+        if (!byStatus.isEmpty()) {
+            return ResponseEntity.ok(byStatus);
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{petId}")
     @Operation(summary = "Find Pet by ID", description = "Returns a single pet")
     public ResponseEntity<Pet> findPetById(@PathVariable Long petId) {
         Optional<Pet> byId = petService.findById(petId);
-        if(byId.isPresent()){
+        if (byId.isPresent()) {
             return ResponseEntity.ok(byId.get());
         }
         return ResponseEntity.badRequest().build();
@@ -64,21 +60,15 @@ public class PetController {
     @PostMapping("/{petId}")
     @Operation(summary = "Update a pet in the store with form data")
     public ResponseEntity<Pet> updatePetById(@PathVariable Long petId, String name, PetStatus status) {
-        Optional<Pet> pet = petService.updatePetById(petId, name, status);
-        if(pet.isPresent()){
-            return ResponseEntity.ok(pet.get());
-        }
-        return ResponseEntity.badRequest().build();
+       petService.updatePetById(petId, name, status);
+       return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{petId}")
     @Operation(summary = "Deletes a pet")
     public ResponseEntity<Pet> deletePetById(@PathVariable Long petId) {
-        Optional<Pet> pet = petService.deletePetById(petId);
-        if(pet.isPresent()){
-            return ResponseEntity.ok(pet.get());
-        }
-        return ResponseEntity.badRequest().build();
+        petService.deletePetById(petId);
+        return ResponseEntity.ok().build();
     }
 
 }
